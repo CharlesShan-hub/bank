@@ -1,0 +1,14 @@
+server:
+  port: 6997
+
+spring:
+  datasource:
+    # createDatabaseIfNotExist=true：首次连接自动创建 bank_bs 库
+    url: jdbc:mariadb://localhost:3306/bank_bs?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: ""
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update   # 自动建表/更新表结构
+    open-in-view: false

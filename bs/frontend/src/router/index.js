@@ -1,0 +1,37 @@
+import { createRouter, createWebHistory } from 'vue-router'
+
+const routes = [
+  { path: '/', redirect: '/login' },
+  { path: '/login', component: () => import('../views/LoginView.vue') },
+  { path: '/register', component: () => import('../views/RegisterView.vue') },
+  {
+    path: '/admin',
+    component: () => import('../views/AdminHome.vue'),
+    redirect: '/admin/users',
+    children: [
+      { path: 'users', component: () => import('../views/UserManageView.vue') },
+      { path: 'accounts', component: () => import('../views/AccountManageView.vue') },
+    ],
+  },
+  {
+    path: '/user',
+    component: () => import('../views/UserHomeView.vue'),
+  },
+]
+
+const router = createRouter({ history: createWebHistory(), routes })
+
+// 路由守卫：未登录跳登录页；/admin 仅管理员可进；普通用户误入 /admin 则回用户主页
+router.beforeEach((to) => {
+  const raw = localStorage.getItem('user')
+  const user = raw ? JSON.parse(raw) : null
+  const publicPaths = ['/login', '/register']
+  if (!user && !publicPaths.includes(to.path)) {
+    return '/login'
+  }
+  if (to.path.startsWith('/admin') && user && user.role !== 'admin') {
+    return '/user'
+  }
+})
+
+export default router
