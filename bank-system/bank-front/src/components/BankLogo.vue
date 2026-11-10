@@ -21,6 +21,8 @@
 </template>
 
 <script setup>
+// 唯一的 prop：size 控制图标边长
+// 支持数字或字符串，默认 32px
 defineProps({
   size: { type: [Number, String], default: 32 },
 })

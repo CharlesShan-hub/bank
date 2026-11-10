@@ -21,6 +21,8 @@
       </el-dropdown>
     </el-header>
     <el-main class="main">
+      <!-- 普通用户主页（选做 2.3 未选择） -->
+      <!-- 仅作登录角色分流的预留页：欢迎信息 + 退出登录 -->
       <el-card class="welcome" shadow="never">
         <h2>欢迎回来，{{ user?.username }}</h2>
         <p class="sub">普通用户功能（存款、取款、转账）开发中，敬请期待</p>
@@ -36,10 +38,14 @@ import { ArrowDown, SwitchButton } from '@element-plus/icons-vue'
 import BankLogo from '../components/BankLogo.vue'
 
 const router = useRouter()
+// 登录时已把用户信息写入 localStorage
+// 这里直接读取，用于欢迎语展示
 const user = JSON.parse(localStorage.getItem('user') || 'null')
 
+// 头部下拉菜单：目前仅提供退出登录
 function onCommand(command) {
   if (command === 'logout') {
+    // 清除登录态并回到登录页
     localStorage.removeItem('user')
     ElMessage.success('已退出登录')
     router.push('/login')

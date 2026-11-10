@@ -41,18 +41,24 @@ import BankLogo from '../components/BankLogo.vue'
 import request from '../api/request'
 
 const router = useRouter()
+// v-model 双向绑定的表单数据
 const form = reactive({ username: '', password: '' })
 
 async function onLogin() {
+  // 前端先做一次非空校验，减少无意义的请求
   if (!form.username || !form.password) {
     ElMessage.warning('请输入用户名和密码')
     return
   }
   try {
+    // POST /api/login，成功返回用户信息
     const user = await request.post('/login', form)
+    // 登录态存入 localStorage：
+    // 供路由守卫与各页面读取，刷新不丢失
     localStorage.setItem('user', JSON.stringify(user))
     ElMessage.success('登录成功')
-    // 按角色分流：管理员进管理主页，普通用户进用户主页
+    // 按角色分流：
+    // 管理员进管理主页，普通用户进用户主页
     router.push(user.role === 'admin' ? '/admin' : '/user')
   } catch {
     // 错误已由 axios 拦截器统一弹窗

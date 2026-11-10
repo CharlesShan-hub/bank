@@ -66,11 +66,11 @@ bs/
 
 ```bash
 # 1. 后端（先启，首次运行会自动下载依赖、建库建表并预置数据）
-cd bs/backend
+cd backend
 mvn spring-boot:run
 
 # 2. 前端
-cd bs/frontend
+cd frontend
 yarn install
 yarn dev
 # 浏览器打开 http://localhost:7997

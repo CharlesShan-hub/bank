@@ -68,8 +68,8 @@ bank-system/
 ```bash
 # 1. 启动后端（先启）
 cd bank-server
-python -m pip install -r requirements.txt
-python -m uvicorn main:app --reload --port 6998
+python3 -m pip install -r requirements.txt
+python3 -m uvicorn main:app --reload --port 6998
 
 # 2. 启动前端
 cd bank-front

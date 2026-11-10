@@ -5,7 +5,8 @@
         <BankLogo :size="26" />
         <span>银行管理系统</span>
       </div>
-      <!-- 左侧菜单：点击切换右侧内容 -->
+      <!-- 选做 2.1/2.2 要求(1)：左侧菜单，点击切换右侧内容 -->
+      <!-- el-menu 开启 router 模式：index 即跳转地址 -->
       <el-menu
         router
         :default-active="route.path"
@@ -58,14 +59,19 @@ import BankLogo from '../components/BankLogo.vue'
 
 const route = useRoute()
 const router = useRouter()
+// 登录时已把用户信息写入 localStorage
+// 这里直接读取，用于头部头像与用户名展示
 const user = JSON.parse(localStorage.getItem('user') || 'null')
 
+// 根据当前子路由动态显示页面标题
 const pageTitle = computed(() =>
   route.path.startsWith('/admin/users') ? '用户管理' : '账户管理'
 )
 
+// 头部下拉菜单：目前仅提供退出登录
 function onCommand(command) {
   if (command === 'logout') {
+    // 清除登录态并回到登录页
     localStorage.removeItem('user')
     ElMessage.success('已退出登录')
     router.push('/login')

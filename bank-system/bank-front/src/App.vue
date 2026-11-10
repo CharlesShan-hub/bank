@@ -1,9 +1,11 @@
 <template>
+  <!-- 根组件：只放路由出口，页面切换全部交给 vue-router -->
   <router-view />
 </template>
 
 <style>
 /* 全局基础样式（稳重银行蓝主题） */
+/* 覆盖 Element Plus 主色为银行蓝 */
 :root {
   --el-color-primary: #14589c;
   --el-color-primary-dark-2: #0e4579;
@@ -13,6 +15,7 @@
   --el-color-primary-light-8: #d0deeb;
   --el-color-primary-light-9: #e7eef5;
 }
+/* 全局清零：去掉默认边距，统一盒模型 */
 * {
   margin: 0;
   padding: 0;
@@ -25,6 +28,7 @@ body,
   height: 100%;
 }
 
+/* 全站默认字体、背景与文字颜色 */
 body {
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
     'Microsoft YaHei', Arial, sans-serif;

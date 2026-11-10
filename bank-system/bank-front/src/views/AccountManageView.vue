@@ -8,7 +8,7 @@
         </div>
         <el-button :icon="Refresh" @click="load">刷新</el-button>
       </div>
-      <!-- el-table 显示所有账户信息，每行提供注销、编辑按钮 -->
+      <!-- 选做 2.2 要求(2)：基于 el-table 显示所有账户信息，每行提供注销、编辑按钮 -->
       <el-table
         v-loading="loading"
         :data="accounts"
@@ -78,6 +78,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Refresh, Edit, Delete, User } from '@element-plus/icons-vue'
 import request from '../api/request'
 
+// 选做 2.2 要求(1)：本页对应左侧「账户管理」菜单项
+// 路由为 /admin/accounts，仅 admin 可见（路由守卫保证）
 const accounts = ref([])
 const loading = ref(false)
 const dialogVisible = ref(false)
@@ -85,6 +87,9 @@ const editForm = reactive({ id: null, balance: 0, status: '正常' })
 
 const headerStyle = { background: '#eef3f8', color: '#14447c', fontWeight: 600 }
 
+// 拉取账户列表：GET /api/accounts
+// 后端 JOIN users 带出所属用户名
+// onMounted 时自动加载一次
 async function load() {
   loading.value = true
   try {
@@ -95,11 +100,15 @@ async function load() {
 }
 onMounted(load)
 
+// 打开编辑弹窗：回填当前行的余额与状态
 function openEdit(row) {
   Object.assign(editForm, { id: row.id, balance: row.balance, status: row.status })
   dialogVisible.value = true
 }
 
+// PUT /api/accounts/{id}
+// 余额限制非负、保留两位小数（el-input-number）
+// 状态下拉仅「正常 / 注销」两项
 async function onSave() {
   await request.put(`/accounts/${editForm.id}`, {
     balance: editForm.balance,
@@ -110,6 +119,9 @@ async function onSave() {
   load()
 }
 
+// 注销前弹确认框，防止误操作
+// 确认后 DELETE /api/accounts/{id}
+// 后端软删除：仅把状态置为「注销」
 function onClose(row) {
   ElMessageBox.confirm(`确定注销账户「${row.account_no}」吗？`, '提示', { type: 'warning' })
     .then(async () => {

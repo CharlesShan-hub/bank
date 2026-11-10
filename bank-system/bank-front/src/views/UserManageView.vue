@@ -8,7 +8,7 @@
         </div>
         <el-button :icon="Refresh" @click="load">刷新</el-button>
       </div>
-      <!-- el-table 显示所有用户信息，每行提供删除、编辑按钮 -->
+      <!-- 选做 2.1 要求(2)：基于 el-table 显示所有用户信息，每行提供删除、编辑按钮 -->
       <el-table
         v-loading="loading"
         :data="users"
@@ -65,6 +65,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Refresh, Edit, Delete, User } from '@element-plus/icons-vue'
 import request from '../api/request'
 
+// 选做 2.1 要求(1)：本页对应左侧「用户管理」菜单项
+// 路由为 /admin/users，仅 admin 可见（路由守卫保证）
 const users = ref([])
 const loading = ref(false)
 const dialogVisible = ref(false)
@@ -72,6 +74,8 @@ const editForm = reactive({ id: null, username: '', password: '' })
 
 const headerStyle = { background: '#eef3f8', color: '#14447c', fontWeight: 600 }
 
+// 拉取用户列表：GET /api/users
+// onMounted 时自动加载一次
 async function load() {
   loading.value = true
   try {
@@ -82,6 +86,8 @@ async function load() {
 }
 onMounted(load)
 
+// 打开编辑弹窗：回填当前行数据
+// 密码框留空表示不修改
 function openEdit(row) {
   Object.assign(editForm, { id: row.id, username: row.username, password: '' })
   dialogVisible.value = true
@@ -92,6 +98,8 @@ async function onSave() {
     ElMessage.warning('用户名不能为空')
     return
   }
+  // PUT /api/users/{id}
+  // 密码为空则不传该字段，后端只更新传入的字段
   await request.put(`/users/${editForm.id}`, {
     username: editForm.username,
     ...(editForm.password ? { password: editForm.password } : {}),
@@ -101,6 +109,9 @@ async function onSave() {
   load()
 }
 
+// 删除前弹确认框，防止误操作
+// 确认后 DELETE /api/users/{id}
+// 后端会级联删除该用户名下的账户
 function onDelete(row) {
   ElMessageBox.confirm(`确定删除用户「${row.username}」吗？其名下账户将一并删除。`, '提示', {
     type: 'warning',
