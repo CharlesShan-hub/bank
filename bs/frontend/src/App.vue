@@ -1,4 +1,5 @@
 <template>
+  <!-- 根组件：只放路由出口，页面切换全部交给 vue-router -->
   <router-view />
 </template>
 

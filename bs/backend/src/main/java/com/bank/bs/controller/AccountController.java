@@ -42,6 +42,7 @@ public class AccountController {
     public List<Map<String, Object>> list() {
         List<Map<String, Object>> result = new ArrayList<>();
         for (Account a : accountRepository.findAllByOrderByIdAsc()) {
+            // 逐条联查用户名——课程作业数据量小，直接循环查询足够清晰
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("id", a.getId());
             m.put("userId", a.getUserId());
@@ -56,6 +57,7 @@ public class AccountController {
         return result;
     }
 
+    /** 按用户 ID 取账户，找不到直接报业务异常 */
     private Account getAccountByUserId(Long userId) {
         return accountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("账户不存在"));
@@ -89,6 +91,7 @@ public class AccountController {
     public Map<String, String> withdraw(@PathVariable Long userId, @RequestBody AmountBody body) {
         checkAmount(body.amount());
         Account account = getAccountByUserId(userId);
+        // compareTo < 0 说明当前余额小于取款金额
         if (account.getBalance().compareTo(body.amount()) < 0) {
             throw new IllegalArgumentException("余额不足");
         }
@@ -103,6 +106,7 @@ public class AccountController {
     public Map<String, String> transfer(@PathVariable Long userId, @RequestBody TransferBody body) {
         checkAmount(body.amount());
         Account from = getAccountByUserId(userId);
+        // 收款方按账号定位，账号不存在直接报错
         Account to = accountRepository.findByAccountNo(body.toAccountNo())
                 .orElseThrow(() -> new IllegalArgumentException("目标账户不存在"));
         if (to.getId().equals(from.getId())) {
@@ -111,6 +115,7 @@ public class AccountController {
         if (from.getBalance().compareTo(body.amount()) < 0) {
             throw new IllegalArgumentException("余额不足");
         }
+        // 一减一加两笔更新；@Transactional 保证要么都成功、要么都回滚
         from.setBalance(from.getBalance().subtract(body.amount()));
         to.setBalance(to.getBalance().add(body.amount()));
         accountRepository.save(from);
@@ -118,6 +123,7 @@ public class AccountController {
         return Map.of("message", "转账成功");
     }
 
+    /** 金额校验：非空且 > 0（signum() <= 0 覆盖 0 和负数） */
     private void checkAmount(BigDecimal amount) {
         if (amount == null || amount.signum() <= 0) {
             throw new IllegalArgumentException("金额必须大于 0");

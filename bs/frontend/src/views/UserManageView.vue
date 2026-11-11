@@ -1,4 +1,5 @@
 <template>
+  <!-- 选做 2.1 要求：基于 el-table 展示所有用户信息，每行提供编辑、删除按钮 -->
   <el-card class="table-card" shadow="never">
     <div class="card-header">
       <div class="card-title">
@@ -54,12 +55,15 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Refresh, User, Edit, Delete } from '@element-plus/icons-vue'
 import request from '../api/request'
 
+// 表格数据与编辑弹窗状态
 const users = ref([])
 const loading = ref(false)
 const dialogVisible = ref(false)
 const saving = ref(false)
+// 编辑表单：密码留空表示「不修改密码」
 const editForm = reactive({ id: null, username: '', password: '' })
 
+// 拉取用户列表：GET /api/users（进入页面时自动调用）
 async function load() {
   loading.value = true
   try {
@@ -69,11 +73,13 @@ async function load() {
   }
 }
 
+// 打开编辑弹窗：回填当前行数据
 function openEdit(row) {
   Object.assign(editForm, { id: row.id, username: row.username, password: '' })
   dialogVisible.value = true
 }
 
+// 保存修改：PUT /api/users/{id}，成功后刷新列表
 async function onSave() {
   if (!editForm.username.trim()) {
     ElMessage.warning('用户名不能为空')
@@ -90,6 +96,8 @@ async function onSave() {
   }
 }
 
+// 删除用户：先弹确认框防误操作，确认后 DELETE /api/users/{id}
+// 后端会级联删除该用户名下的账户
 async function onDelete(row) {
   await ElMessageBox.confirm(`确定删除用户「${row.username}」吗？`, '提示', { type: 'warning' })
   await request.delete(`/users/${row.id}`)
@@ -97,6 +105,7 @@ async function onDelete(row) {
   load()
 }
 
+// 组件挂载即拉取数据
 onMounted(load)
 </script>
 

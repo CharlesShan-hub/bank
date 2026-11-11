@@ -12,6 +12,32 @@
 | 账户管理 | 选做 2.2(1) | admin 左侧菜单切换，el-table 展示所有账户信息（按要求去掉 2.2(2) 的注销/编辑按钮） |
 | 普通用户主页 | 选做 2.3 | 显示当前用户账户余额；el-button 提供存款/取款/转账；点击不同按钮显示不同表单弹窗 |
 
+**系统功能结构图**：
+
+```mermaid
+graph TD
+    SYS["银行管理系统"]
+    SYS --> PUB["公共模块"]
+    SYS --> ADM["管理员模块"]
+    SYS --> USR["用户模块 2.3"]
+
+    PUB --> F1["用户注册（必做）"]
+    PUB --> F2["用户登录"]
+    ADM --> F3["用户管理 2.1<br>列表 / 删除 / 编辑"]
+    ADM --> F4["账户管理 2.2(1)<br>账户列表"]
+    USR --> F5["余额查询"]
+    USR --> F6["存款"]
+    USR --> F7["取款"]
+    USR --> F8["转账"]
+
+    classDef root fill:#0f6b4f,stroke:#093f2e,stroke-width:2px,color:#ffffff
+    classDef module fill:#dcefe6,stroke:#0f6b4f,color:#093f2e
+    classDef leaf fill:#ffffff,stroke:#6aa892,color:#1f3329
+    class SYS root
+    class PUB,ADM,USR module
+    class F1,F2,F3,F4,F5,F6,F7,F8 leaf
+```
+
 ## 二、技术栈
 
 - **前端**：Vue3 + Vite + Element Plus + Vue Router + Axios（yarn，端口 7997）

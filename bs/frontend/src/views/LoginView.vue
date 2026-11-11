@@ -1,4 +1,5 @@
 <template>
+  <!-- 登录页：左侧品牌区 + 右侧表单区（回车键也可提交） -->
   <div class="login-wrap">
     <div class="login-panel">
       <!-- 左侧品牌区：墨绿底 + 白色点缀 -->
@@ -39,10 +40,13 @@ import BankLogo from '../components/BankLogo.vue'
 import request from '../api/request'
 
 const router = useRouter()
+// v-model 双向绑定登录表单
 const form = reactive({ username: '', password: '' })
 const loading = ref(false)
 
+// 登录：POST /api/login，成功后端返回 { id, username, role }
 async function onLogin() {
+  // 提交前先做非空校验，避免无谓请求
   if (!form.username || !form.password) {
     ElMessage.warning('请输入用户名和密码')
     return
@@ -50,6 +54,7 @@ async function onLogin() {
   loading.value = true
   try {
     const user = await request.post('/login', form)
+    // 登录态存 localStorage：路由守卫、顶栏头像都从这里读取
     localStorage.setItem('user', JSON.stringify(user))
     ElMessage.success('登录成功')
     // 按角色分流：管理员进管理主页，普通用户进用户主页

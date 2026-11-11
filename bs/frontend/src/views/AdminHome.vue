@@ -1,10 +1,12 @@
 <template>
+  <!-- 管理端外壳：左侧菜单 + 顶栏 + 内容区，子页面由 <router-view> 渲染 -->
   <el-container class="admin-layout">
     <el-aside width="220px" class="aside">
       <div class="logo">
         <BankLogo :size="26" />
         <span>银行管理系统</span>
       </div>
+      <!-- router 模式：菜单项的 index 即跳转路径，当前路由自动高亮 -->
       <el-menu
         :default-active="route.path"
         router
@@ -53,10 +55,13 @@ import BankLogo from '../components/BankLogo.vue'
 
 const route = useRoute()
 const router = useRouter()
+// 登录信息存在 localStorage（登录页写入），这里读取用于顶栏展示
 const user = JSON.parse(localStorage.getItem('user') || 'null')
 
+// 顶栏标题跟随当前子路由变化
 const pageTitle = computed(() => (route.path.endsWith('/users') ? '用户管理' : '账户管理'))
 
+// 下拉菜单命令：目前仅「退出登录」——清掉登录态并回登录页
 function onCommand(command) {
   if (command === 'logout') {
     localStorage.removeItem('user')

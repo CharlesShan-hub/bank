@@ -1,3 +1,5 @@
+// 统一的 axios 实例：所有接口调用都走它
+// baseURL 用相对路径 /api，由 Vite 代理转发到 6997 后端，天然规避跨域
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 

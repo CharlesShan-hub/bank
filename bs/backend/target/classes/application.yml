@@ -1,14 +1,17 @@
 server:
-  port: 6997
+  port: 6997  # 后端端口；前端 Vite 把 /api 代理到这里
 
 spring:
   datasource:
+    # 为什么用 mariadb 驱动而不是 mysql-connector-j：
+    # 本机 MariaDB 13 的 information_schema 与 MySQL 驱动的元数据查询不兼容，
+    # 会报 Unknown column 'RESERVED'，必须用原生 mariadb-java-client
     # createDatabaseIfNotExist=true：首次连接自动创建 bank_bs 库
     url: jdbc:mariadb://localhost:3306/bank_bs?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
-    password: ""
+    password: ""  # 本地库 root 无密码
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update   # 自动建表/更新表结构
-    open-in-view: false
+      ddl-auto: update   # 启动时按实体类自动建表/更新表结构，无需手写 SQL
+    open-in-view: false  # 关闭 OSIV，数据库连接不占用到视图渲染阶段

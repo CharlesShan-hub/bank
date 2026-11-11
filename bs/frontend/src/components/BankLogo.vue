@@ -18,6 +18,9 @@
 </template>
 
 <script setup>
+// 品牌图标组件：手绘 SVG 复刻农行「麦穗 + 圆环」标志
+// 唯一的 prop：size 控制图标边长（数字或字符串，默认 32px）
+// 颜色跟随父级的 CSS color（currentColor），深底浅底都能放
 defineProps({
   size: { type: [Number, String], default: 32 },
 })

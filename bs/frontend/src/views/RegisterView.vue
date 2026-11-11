@@ -14,6 +14,8 @@
       <!-- 右侧表单区 -->
       <div class="form-side">
         <h2 class="form-title">注册新用户</h2>
+        <!-- 必做要求：注册表单含用户名、密码、确认密码及注册按钮；
+             el-form 的 rules 做前端校验，:model + v-model 双向绑定数据 -->
         <el-form ref="formRef" :model="form" :rules="rules" size="large" @keyup.enter="onRegister">
           <el-form-item prop="username">
             <el-input v-model="form.username" placeholder="用户名" :prefix-icon="User" />
@@ -46,6 +48,7 @@ const loading = ref(false)
 // v-model 双向绑定表单数据
 const form = reactive({ username: '', password: '', confirmPassword: '' })
 
+// 前端校验规则：用户名 2-20 字符；密码至少 6 位；确认密码用自定义校验器比对两次输入
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -65,7 +68,8 @@ const rules = {
   ],
 }
 
-// 点击注册按钮，axios 发起注册请求
+// 点击注册按钮：先过一遍表单校验，再 POST /api/register
+// 后端查重用户名，重名返回 400「用户名已存在」，由拦截器统一弹窗
 async function onRegister() {
   await formRef.value.validate()
   loading.value = true

@@ -1,21 +1,25 @@
+// 路由表 + 全局守卫
+// 页面结构：/login、/register 公开；/admin 管理端（嵌套用户管理、账户管理两个子页）；/user 普通用户主页
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-  { path: '/', redirect: '/login' },
+  { path: '/', redirect: '/login' }, // 根路径重定向到登录页
+  // 懒加载写法：页面组件用到时才下载，首屏更快
   { path: '/login', component: () => import('../views/LoginView.vue') },
   { path: '/register', component: () => import('../views/RegisterView.vue') },
   {
     path: '/admin',
-    component: () => import('../views/AdminHome.vue'),
-    redirect: '/admin/users',
+    component: () => import('../views/AdminHome.vue'), // 管理端外壳（侧栏 + 顶栏）
+    redirect: '/admin/users', // 进入 /admin 默认落到用户管理
     children: [
+      // 选做 2.1：用户管理；选做 2.2(1)：账户列表展示
       { path: 'users', component: () => import('../views/UserManageView.vue') },
       { path: 'accounts', component: () => import('../views/AccountManageView.vue') },
     ],
   },
   {
     path: '/user',
-    component: () => import('../views/UserHomeView.vue'),
+    component: () => import('../views/UserHomeView.vue'), // 普通用户主页（选做 2.3）
   },
 ]
 

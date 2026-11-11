@@ -12,6 +12,29 @@
 | 账户管理 | 选做 2.2 | 同上布局，el-table 显示账户列表，提供注销/编辑按钮 |
 | 普通用户主页 | 预留 | 普通用户登录后进入，仅含欢迎信息与退出入口，业务功能（存款/取款/转账）暂未实现 |
 
+**系统功能结构图**：
+
+```mermaid
+graph TD
+    SYS["银行管理系统"]
+    SYS --> PUB["公共模块"]
+    SYS --> ADM["管理员模块"]
+    SYS --> USR["用户模块（预留）"]
+
+    PUB --> F1["用户注册（必做）"]
+    PUB --> F2["用户登录"]
+    ADM --> F3["用户管理 2.1<br>列表 / 删除 / 编辑"]
+    ADM --> F4["账户管理 2.2<br>列表 / 注销 / 编辑"]
+    USR --> F5["我的主页"]
+
+    classDef root fill:#14589c,stroke:#0c2d52,stroke-width:2px,color:#ffffff
+    classDef module fill:#dce9f6,stroke:#14589c,color:#0c2d52
+    classDef leaf fill:#ffffff,stroke:#7ba3cf,color:#1f2d3d
+    class SYS root
+    class PUB,ADM,USR module
+    class F1,F2,F3,F4,F5 leaf
+```
+
 ## 二、技术栈
 
 - **前端**：Vue3 + Vite + Element Plus + Vue Router + Axios，包管理用 yarn（`yarn install` → `yarn dev` 一键启动）

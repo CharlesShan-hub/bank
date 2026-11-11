@@ -1,4 +1,5 @@
 <template>
+  <!-- 选做 2.2(1) 要求：账户列表展示（本页只读，不含注销/编辑按钮） -->
   <el-card class="table-card" shadow="never">
     <div class="card-header">
       <div class="card-title">
@@ -44,9 +45,11 @@ import { onMounted, ref } from 'vue'
 import { Refresh, User } from '@element-plus/icons-vue'
 import request from '../api/request'
 
+// 账户列表数据（用户名列由后端联查返回）
 const accounts = ref([])
 const loading = ref(false)
 
+// 拉取账户列表：GET /api/accounts（进入页面时自动调用）
 async function load() {
   loading.value = true
   try {
@@ -56,10 +59,12 @@ async function load() {
   }
 }
 
+// 余额列的自定义排序：balance 以字符串返回，需转数字再比较
 function byBalance(a, b) {
   return Number(a.balance) - Number(b.balance)
 }
 
+// 组件挂载即拉取数据
 onMounted(load)
 </script>
 

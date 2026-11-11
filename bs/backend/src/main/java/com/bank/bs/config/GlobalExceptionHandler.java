@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * 业务层抛出的非法参数（用户名已存在、余额不足、金额非法等）
+     * 统一包装成 HTTP 400 + JSON {"message": "..."}
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleBadRequest(IllegalArgumentException e) {

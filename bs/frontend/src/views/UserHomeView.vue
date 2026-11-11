@@ -21,11 +21,13 @@
       </el-dropdown>
     </el-header>
     <el-main class="main">
+      <!-- 余额卡片：展示当前登录用户的账号与实时余额 -->
       <el-card class="balance-card" shadow="never">
         <div class="balance-label">当前账户余额</div>
         <div class="balance-value">¥ {{ balance.toFixed(2) }}</div>
         <div class="account-no">账号：<span class="mono">{{ accountNo }}</span></div>
       </el-card>
+      <!-- 选做 2.3：存款、取款、转账三个操作入口 -->
       <div class="actions">
         <el-button type="primary" size="large" round :icon="Money" @click="openDialog('deposit')">存 款</el-button>
         <el-button type="primary" plain size="large" round :icon="Coin" @click="openDialog('withdraw')">取 款</el-button>
@@ -60,6 +62,7 @@ import BankLogo from '../components/BankLogo.vue'
 import request from '../api/request'
 
 const router = useRouter()
+// 登录信息由登录页写入 localStorage，这里取当前用户 id 调接口
 const user = JSON.parse(localStorage.getItem('user') || 'null')
 
 const accountNo = ref('')
@@ -71,12 +74,15 @@ const form = reactive({ toAccountNo: '', amount: 100 })
 
 const dialogTitle = computed(() => ({ deposit: '存款', withdraw: '取款', transfer: '转账' }[dialogType.value]))
 
+// 查询当前用户账户：GET /api/account/{userId}
+// 进入页面时自动调用，每次存取转成功后也再调一次刷新余额
 async function load() {
   const acc = await request.get(`/account/${user.id}`)
   accountNo.value = acc.accountNo
   balance.value = Number(acc.balance)
 }
 
+// 打开操作弹窗：deposit / withdraw / transfer 三种类型共用一个弹窗
 function openDialog(type) {
   dialogType.value = type
   form.amount = 100
@@ -84,6 +90,8 @@ function openDialog(type) {
   dialogVisible.value = true
 }
 
+// 提交操作：按弹窗类型分别调用
+// POST /api/account/{id}/deposit | /withdraw | /transfer
 async function onSubmit() {
   if (!form.amount || form.amount <= 0) {
     ElMessage.warning('请输入正确金额')
