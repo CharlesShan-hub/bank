@@ -1,0 +1,11 @@
+# Windows 下 just 默认找 sh 会报错
+# 这行指定用 PowerShell 执行（你的报错就是缺这行）
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+
+# 启动后端（端口 6998）
+server:
+    cd bank-server; python -m uvicorn main:app --reload --port 6998
+
+# 启动前端（端口 7998）
+client:
+    cd bank-front; yarn dev
