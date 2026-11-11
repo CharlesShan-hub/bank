@@ -1,0 +1,8 @@
+server:
+  port: 6995  # 后端端口；前端 Vite 把 /api 代理到这里
+
+# 无数据库配置：所有数据保存在内存中的 BankStore（ConcurrentHashMap）
+# 服务重启后数据恢复为 DataSeeder 预置的演示数据，满足"不用数据库、缓存在内存"的要求
+spring:
+  application:
+    name: bank-backend
